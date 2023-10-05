@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "clear-gha-cache"
+version = "0.1.0"
+description = "Clear Github Actions cache"
+authors = ["Matthew Cane <matthew.cane@citizensadvice.org.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+tqdm = "^4.66.1"
+humanize = "^4.8.0"
+urllib3 = "^2.0.6"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
