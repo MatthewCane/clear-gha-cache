@@ -10,7 +10,7 @@ This script deletes all GitHub Actions caches for a specified repository.
 ## Usage
 
 ```bash
-poetry run python clear-gha-cache.py <token> <repo>
+poetry run python src/clear_gha_cache.py <token> <repo>
 ```
 
 Where:
