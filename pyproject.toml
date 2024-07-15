@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 tqdm = "^4.66.1"
-humanize = "^4.8.0"
+humanize = "^4.10.0"
 urllib3 = "^2.0.6"
 requests = "^2.31.0"
 
