@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.11"
 tqdm = "^4.66.1"
 humanize = "^4.8.0"
-urllib3 = "^2.0.6"
+urllib3 = "^2.2.3"
 requests = "^2.31.0"
 
 
