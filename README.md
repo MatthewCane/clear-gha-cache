@@ -4,18 +4,19 @@ This script deletes all GitHub Actions cache entries for a specified repository.
 
 ## Installation
 
-- Make sure [poetry](https://python-poetry.org/docs/#installation) is installed
-- Install dependencies with `poetry install`
+1. Clone this repository locally (it is currently not available on PyPi)
+2. Ensure [uv](https://docs.astral.sh/uv/getting-started/installation/) is installed
 
 ## Usage
 
 ```bash
-poetry run python src/clear_gha_cache.py <token> <repo>
+uv run python clear_gha_cache.py <github token> <username>/<repo>
 ```
 
-Where:
+`<github token>` is a GitHub personal access token with `actions:read` and `actions:write`. If you have the Github CLI installed you can use `gh auth token` to generate one, for example:
 
-- `<token>` is a GitHub personal access token with `actions:read` and `actions:write`. If you have the Github CLI installed you can use `gh auth token` to generate one
-- `<repo>` is the repository name in owner/repo format e.g. octocat/hello-world.
+```bash
+uv run python clear_gha_cache.py $(gh auth token) octocat/hello-world
+```
 
 The script will prompt you for confirmation before proceeding.
