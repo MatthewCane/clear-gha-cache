@@ -31,8 +31,11 @@ def get_caches() -> list[dict]:
         response.status_code == 200
     ), f"Cache fetch failed with status code {response.status_code}: {json.loads(response.text)['message']}"
 
-    caches = json.loads(response.text)["actions_caches"]
     cache_count = total_caches()
+    if cache_count == 0:
+        return []
+
+    caches = json.loads(response.text)["actions_caches"]
     if cache_count != 0:
         print("Fetching caches...")
         with tqdm(total=cache_count, leave=False) as progress:
@@ -44,13 +47,10 @@ def get_caches() -> list[dict]:
                     params={"per_page": PAGE_SIZE},
                 )
                 progress.update(PAGE_SIZE)
-                caches.extend(json.loads(response.text)["actions_caches"])
+                cache_batch: list[dict] = json.loads(response.text)["actions_caches"]
+                caches.extend(cache_batch)
 
-    if isinstance(caches, list) and len(caches) > 0:
-        return caches
-    else:
-        print("No caches found")
-        exit(0)
+    return caches
 
 
 def get_total_cache_size(caches: list[dict]) -> float:
@@ -78,8 +78,14 @@ if __name__ == "__main__":
     try:
         TOKEN = sys.argv[1]
         REPO = sys.argv[2]
-    except IndexError:
-        print("Invalid Arguments. Usage: clear-gha-cache.py <token> <repo>")
+        if "--keys-starting-with" in sys.argv:
+            KEY_FILTER = sys.argv[sys.argv.index("--keys-starting-with") + 1]
+        else:
+            KEY_FILTER = None
+    except (IndexError, ValueError):
+        print(
+            "Invalid Arguments. Usage: clear-gha-cache.py <token> <repo> [--keys-starting-with <string>]"
+        )
         sys.exit(1)
 
     HEADERS = {
@@ -91,10 +97,14 @@ if __name__ == "__main__":
 
     caches = get_caches()
 
+    if KEY_FILTER:
+        caches = list(filter(lambda x: x["key"].startswith(KEY_FILTER), caches))
+        filter_info = f" with key starting with '[blue]{KEY_FILTER}[/]'"
+
     total_cache_size = get_total_cache_size(caches)
 
     if Confirm.ask(
-        f"Found [blue]{len(caches)}[/] caches totalling [blue]{humanize.naturalsize(total_cache_size)}[/] to delete, are you sure?",
+        f"Found [blue]{len(caches)}[/] caches{filter_info} totalling [blue]{humanize.naturalsize(total_cache_size)}[/]. Delete?",
         default=False,
     ):
         clear_caches(caches)
